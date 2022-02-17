@@ -9,3 +9,4 @@ for (let p in pessoa){
     console.log('dados da pessoa', p)
     console.log('dados da pessoa', pessoa [p])
 }
+//
