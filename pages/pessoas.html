@@ -6,32 +6,20 @@
                 <input placeholder="Audrey" id="nome" type="text" class="validate">
                 <label class="active" for="nome">Nome</label>
             </div>
-        </div>
-    </form>
+      
+    <div class="input-field col s12">
+    <input placeholder="Aprendendo" id="status" type="text" class="validate">
+    <label class="active" for="status">Status</label>
+          
 </div>
 
-
-<div class="row">
-    <form class="col s12">
-        <div class="row">
-            <div class="input-field col s12">
-                <input placeholder="Aprendendo" id="status" type="text" class="validate">
-                <label class="active" for="status">Status</label>
-            </div>
-        </div>
-    </form>
+ <div class="input-field col s12">
+ <input placeholder="Dev front" id="curso" type="text" class="validate">
+<label class="active" for="curso">Curso</label>
 </div>
-
-
-<div class="row">
-    <form class="col s12">
-        <div class="row">
-            <div class="input-field col s12">
-                <input placeholder="Dev front" id="curso" type="text" class="validate">
-                <label class="active" for="curso">Curso</label>
-            </div>
-        </div>
+    </div>
     </form>
+
     <button onclick="salvarDados()" class="btn waves-effect waves-light" name="action">Salvar
         <i class="material-icons right">send</i>
     </button>
@@ -46,10 +34,29 @@
 </ul>
 
 <script>
-    function pegarDados() {
-        console.log('listando')
 
-        $.getJSON('http://localhost:3000/alunos', function (data, status) {
+function addAluno() {
+        $('#formCrud').show()
+        $('#pessoas').hide()
+        $('#btnSalvar').show()
+        $('#btnAtualizar').hide()
+    }
+
+    function putAluno(){
+        $('#formCrud').show()
+        $('#pessoas').hide()
+        $('#btnSalvar').hide()
+        $('#btnAtualizar').show()
+    }
+
+    function cancelar() {
+        $('#formCrud').hide()
+        $('#pessoas').show()
+    }
+
+
+    function listarDados() {
+        $.getJSON('https://server-audrey.herokuapp.com/alunos', function (data, status) {
             console.log(data)
             let pessoas = []
 
@@ -71,14 +78,19 @@
         })
     }
 
+    listarDados()
+
+
     function pegaId(id) {
         console.log('o id é', id)
-        $.getJSON(`http://localhost:3000/alunos/${id}`, function (data, status) {
+        $.getJSON(`https://server-audrey.herokuapp.com/alunos/${id}`, function (data, status) {
             console.log(data)
             $("#nome").val(data.nome)
             $("#curso").val(data.curso)
             $("#status").val(data.status)
         })
+
+        putAluno()
     }
 
     function salvarDados() {
@@ -91,8 +103,30 @@
         }
         console.log('salvando dados', dadosSalvar)
 
-        $.post("http://localhost:3000/alunos", dadosSalvar, function (result) {
+        $.post("https://server-audrey.herokuapp.com/alunos", dadosSalvar, function (result) {
             console.log('os dados foram salvos', result)
         })
+    }
+
+    function atualizarDados() {
+        var dados = $("input")
+
+        dadosSalvar = {
+            nome: dados[0].value,
+            curso: dados[1].value,
+            matricula: dados[2].value
+        }
+        console.log('dados pra salvar', dadosSalvar)
+
+        $.ajax({
+            type: "PUT",
+            url: `https://server-audrey.herokuapp.com/alunos`,
+            dataType: "jsonp",
+            data: dadosSalvar,
+            success: function (response) {
+           console.log("atualizado", response)
+            }
+        });
+
     }
 </script>
